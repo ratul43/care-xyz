@@ -1,65 +1,63 @@
 "use client";
 
-import { useState } from "react";
 import services from "@/data/services.json";
-
 import centerHouse from "@/data/centerHouse.json";
-
 import { useForm, useWatch } from "react-hook-form";
 
 export default function BookingDetails({ id }) {
+
   const service = services.find((s) => s.id === id);
-
-  const [duration, setDuration] = useState(1);
-  const [division, setDivision] = useState("");
-  const [district, setDistrict] = useState("");
-  const [city, setCity] = useState("");
-  const [area, setArea] = useState("");
-  const [address, setAddress] = useState("");
-
-  const price = service.price_per_hour;
-
-  const totalCost = duration * price;
 
   const {
     register,
     handleSubmit,
     control,
-    // formState: { errors },
-  } = useForm();
+    watch
+  } = useForm({
+    defaultValues: {
+      duration: 1
+    }
+  });
 
-  // console.log(centerHouse);
-
-  const regionsDuplicate = centerHouse.map((c) => c.region);
-  const regions = [...new Set(regionsDuplicate)];
+  const duration = watch("duration");
 
   const senderRegion = useWatch({ control, name: "senderRegion" });
+  const senderDistrict = useWatch({ control, name: "senderDistrict" });
 
+  const price = service.price_per_hour;
+  const totalCost = duration * price;
+
+  // Unique regions
+  const regions = [...new Set(centerHouse.map((c) => c.region))];
+
+  // Get districts by region
   const districtsByRegion = (region) => {
-    const regionDistricts = centerHouse.filter((c) => c.region === region);
-    const districts = regionDistricts.map((d) => d.district);
-    return districts;
+    return centerHouse
+      .filter((c) => c.region === region)
+      .map((d) => d.district);
   };
 
-  const thanaByDistrict = (district) => {
-    const regionDistricts = centerHouse.filter((c) => c.district === district);
-    const thanas = regionDistricts[0].covered_area
-    return thanas;
-  }
+  // Get areas by district
+  const getCoveredAreasByDistrict = (districtName) => {
+    const location = centerHouse.find(
+      (item) => item.district === districtName
+    );
 
-  console.log(thanaByDistrict("Dhaka"));
+    return location ? location.covered_area : [];
+  };
 
-  const handleBooking = async () => {
+  const onSubmit = (data) => {
+
     const bookingData = {
       serviceId: service.id,
       serviceName: service.title,
-      duration,
+      duration: data.duration,
       location: {
-        division,
-        district,
-        city,
-        area,
-        address,
+        division: data.senderRegion,
+        district: data.senderDistrict,
+        city: data.senderDistrict,
+        area: data.senderArea,
+        address: data.address,
       },
       totalCost,
       status: "Pending",
@@ -72,104 +70,144 @@ export default function BookingDetails({ id }) {
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-16">
-      <h1 className="text-3xl font-bold mb-10">Book {service.title}</h1>
 
-      <div className="grid md:grid-cols-2 gap-10">
+      <h1 className="text-3xl font-bold mb-10">
+        Book {service.title}
+      </h1>
+
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="grid md:grid-cols-2 gap-10"
+      >
+
         {/* LEFT SIDE */}
         <div className="space-y-6">
+
           {/* Duration */}
           <div>
-            <label className="font-semibold">Select Duration (Hours)</label>
+            <label className="font-semibold">
+              Select Duration (Hours)
+            </label>
 
             <input
               type="number"
               min="1"
-              value={duration}
-              onChange={(e) => setDuration(e.target.value)}
+              {...register("duration")}
               className="w-full border rounded p-2 mt-2"
             />
           </div>
 
-          {/* sender region  */}
+          {/* Division */}
           <fieldset className="fieldset">
-            <legend className="fieldset-legend font-semibold">
+
+            <legend className="font-semibold">
               Sender Division
             </legend>
+
             <select
               {...register("senderRegion")}
-              defaultValue="Pick a region"
-              className="select w-full border rounded p-2 mt-2"
+              className="w-full border rounded p-2 mt-2 bg-background"
             >
-              <option disabled={true}>Pick a region</option>
+
+              <option
+               value="">Pick a region</option>
 
               {regions.map((r, i) => (
-                <option className="text-background" key={i} value={r}>
+                <option key={i} value={r}>
                   {r}
                 </option>
               ))}
+
             </select>
           </fieldset>
 
-          {/* sender districts */}
+          {/* District */}
           <fieldset className="fieldset">
-            <legend className="fieldset-legend font-semibold">
-              Sender Districts
+
+            <legend className="font-semibold">
+              Sender District
             </legend>
+
             <select
               {...register("senderDistrict")}
-              defaultValue="Pick a district"
-              className="select w-full border rounded p-2 mt-2"
+              className="w-full border rounded p-2 mt-2 bg-background"
             >
-              <option disabled={true}>Pick a district</option>
+
+              <option value="">Pick a district</option>
+
               {districtsByRegion(senderRegion).map((r, i) => (
-                <option className="text-background" key={i} value={r}>
+                <option key={i} value={r}>
                   {r}
                 </option>
               ))}
+
             </select>
+
           </fieldset>
 
-          {/* City */}
+          {/* City (Auto from district) */}
           <div>
+
             <label className="font-semibold">City</label>
 
             <input
-              type="text"
-              placeholder="Enter City"
-              className="w-full border  rounded p-2 mt-2"
-              onChange={(e) => setCity(e.target.value)}
+              value={senderDistrict || ""}
+              readOnly
+              className="w-full border rounded p-2 mt-2"
             />
+
           </div>
 
           {/* Area */}
-          <div>
-            <label className="font-semibold">Area</label>
+          <fieldset className="fieldset">
 
-            <input
-              type="text"
-              placeholder="Enter Area"
-              className="w-full border rounded p-2 mt-2"
-              onChange={(e) => setArea(e.target.value)}
-            />
-          </div>
+            <legend className="font-semibold">
+              Sender Area
+            </legend>
+
+            <select
+              {...register("senderArea")}
+              className="w-full border rounded p-2 mt-2 bg-background"
+            >
+
+              <option value="">Pick an area</option>
+
+              {getCoveredAreasByDistrict(senderDistrict).map((a, i) => (
+                <option key={i} value={a}>
+                  {a}
+                </option>
+              ))}
+
+            </select>
+
+          </fieldset>
 
           {/* Address */}
           <div>
-            <label className="font-semibold">Full Address</label>
+
+            <label className="font-semibold">
+              Full Address
+            </label>
 
             <textarea
-              className="w-full border rounded p-2 mt-2"
+              {...register("address")}
               placeholder="House / Road / Details"
-              onChange={(e) => setAddress(e.target.value)}
+              className="w-full border rounded p-2 mt-2"
             />
+
           </div>
+
         </div>
 
         {/* RIGHT SIDE */}
         <div className="p-6 outline-1 rounded-lg shadow">
-          <h2 className="text-xl font-semibold mb-4">Booking Summary</h2>
+
+          <h2 className="text-xl font-semibold mb-4">
+            Booking Summary
+          </h2>
 
           <div className="space-y-3">
+
             <p>
               <strong>Service:</strong> {service.title}
             </p>
@@ -185,16 +223,19 @@ export default function BookingDetails({ id }) {
             <p className="text-lg font-bold text-blue-600">
               Total Cost: ${totalCost}
             </p>
+
           </div>
 
           <button
-            onClick={handleBooking}
+            type="submit"
             className="mt-6 w-full bg-blue-600 text-white py-3 rounded hover:bg-blue-700"
           >
             Confirm Booking
           </button>
+
         </div>
-      </div>
+
+      </form>
     </div>
   );
 }
