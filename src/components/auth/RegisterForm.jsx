@@ -1,8 +1,15 @@
 "use client";
 
+import { postUser } from "@/actions/server/auth";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { FaEye } from "react-icons/fa";
+import { IoEyeOff } from "react-icons/io5";
 
 export default function RegisterForm() {
+
+    const [show, setShow] = useState(false);
+
 
   const {
     register,
@@ -10,10 +17,15 @@ export default function RegisterForm() {
     formState: { errors }
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log("Register Data:", data);
+  const onSubmit = async (data) => {
+    
+        const result = await postUser(data);
 
-    alert("Registration Successful");
+        if(result){
+            alert("Registration Successful");
+        }
+
+    
   };
 
   return (
@@ -36,7 +48,7 @@ export default function RegisterForm() {
             {...register("name", {
               required: "Name is required"
             })}
-            className="w-full border rounded p-2 mt-1 placeholder-gray-500"
+            className="w-full border rounded p-2 mt-1 text-black placeholder-gray-500"
             placeholder="Enter your name"
           />
 
@@ -56,7 +68,7 @@ export default function RegisterForm() {
             {...register("email", {
               required: "Email is required"
             })}
-            className="w-full border rounded p-2 mt-1 placeholder-gray-500"
+            className="w-full border text-black rounded p-2 mt-1 placeholder-gray-500"
             placeholder="Enter email"
           />
 
@@ -76,7 +88,7 @@ export default function RegisterForm() {
             {...register("contact", {
               required: "Contact number is required"
             })}
-            className="w-full border rounded p-2 mt-1 placeholder-gray-500"
+            className="w-full border text-black rounded p-2 mt-1 placeholder-gray-500"
             placeholder="Enter phone number"
           />
 
@@ -88,11 +100,11 @@ export default function RegisterForm() {
         </div>
 
         {/* Password */}
-        <div>
+        <div className="relative">
           <label className="font-semibold text-black">Password</label>
 
           <input
-            type="password"
+            type={show ? "text" : "password"}
             {...register("password", {
               required: "Password is required",
               minLength: {
@@ -105,9 +117,15 @@ export default function RegisterForm() {
                   "Password must contain at least 1 uppercase and 1 lowercase letter"
               }
             })}
-            className="w-full border rounded p-2 mt-1 placeholder-gray-500"
+            className="w-full border text-black rounded p-2 mt-1 placeholder-gray-500"
             placeholder="Enter password"
           />
+          <span
+                    onClick={() => setShow(!show)}
+                    className="absolute right-3 top-9 cursor-pointer text-black"
+                  >
+                    {show ? <FaEye /> : <IoEyeOff />}
+                  </span>
 
           {errors.password && (
             <p className="text-red-500 text-sm">
@@ -125,7 +143,7 @@ export default function RegisterForm() {
             {...register("nid", {
               required: "NID is required"
             })}
-            className="w-full border rounded p-2 mt-1 placeholder-gray-500"
+            className="w-full border text-black rounded p-2 mt-1 placeholder-gray-500"
             placeholder="Enter NID number"
           />
 
