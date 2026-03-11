@@ -1,0 +1,35 @@
+[
+  {
+    "id": "baby-care",
+    "title": "Baby Care",
+    "icon": "👶",
+    "image": "https://images.unsplash.com/photo-1581579186913-45ac0e6efe93",
+    "description": "Professional babysitters ensuring safety, comfort and happiness for your child.",
+    "details": "Our babysitters are trained professionals who focus on child safety, emotional care, and engaging activities.",
+    "price_per_hour": 10,
+    "available_duration": ["1 hour", "3 hours", "6 hours", "12 hours"],
+    "available_time": ["Morning", "Afternoon", "Evening"]
+  },
+  {
+    "id": "elderly-care",
+    "title": "Elderly Care",
+    "icon": "👴",
+    "image": "https://images.unsplash.com/photo-1584515933487-779824d29309",
+    "description": "Compassionate caregivers providing daily assistance and emotional support for elderly family members.",
+    "details": "Caregivers assist with mobility, companionship, medication reminders, and emotional support.",
+    "price_per_hour": 12,
+    "available_duration": ["2 hours", "6 hours", "12 hours", "24 hours"],
+    "available_time": ["Morning", "Afternoon", "Night"]
+  },
+  {
+    "id": "sick-care",
+    "title": "Sick People Care",
+    "icon": "🤒",
+    "image": "https://images.unsplash.com/photo-1607746882042-944635dfe10e",
+    "description": "Reliable home support and monitoring for sick family members with trained caregivers.",
+    "details": "Caregivers assist with medication, hygiene support, and recovery monitoring.",
+    "price_per_hour": 15,
+    "available_duration": ["3 hours", "6 hours", "12 hours"],
+    "available_time": ["Morning", "Evening", "Night"]
+  }
+]
