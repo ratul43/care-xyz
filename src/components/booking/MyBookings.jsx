@@ -14,8 +14,8 @@ export default function MyBookings() {
 
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedBooking, setSelectedBooking] = useState(null);
 
-  // load bookings
   useEffect(() => {
     const loadBookings = async () => {
       const data = await getBookings();
@@ -26,7 +26,6 @@ export default function MyBookings() {
     loadBookings();
   }, []);
 
-  // cancel booking
   const handleCancel = async (id) => {
 
     const confirm = window.confirm("Cancel this booking?");
@@ -75,45 +74,43 @@ export default function MyBookings() {
           >
 
             <div className="flex justify-between items-center mb-3">
+
               <h2 className="font-semibold text-lg">
                 {booking.serviceName}
               </h2>
 
               <span
-                className={`px-2 py-1 text-xs rounded ${
-                  STATUS_STYLE[booking.status]
-                }`}
+                className={`px-2 py-1 text-xs rounded ${STATUS_STYLE[booking.status]}`}
               >
                 {booking.status}
               </span>
+
             </div>
 
             <div className="text-sm space-y-1 text-gray-600">
 
               <p>
-                <strong>Duration:</strong>{" "}
-                {booking.duration} hours
+                <strong>Duration:</strong> {booking.duration} hours
               </p>
 
               <p>
-                <strong>Total Cost:</strong>{" "}
-                ${booking.totalCost}
+                <strong>Total Cost:</strong> ${booking.totalCost}
               </p>
 
               <p>
-                <strong>Area:</strong>{" "}
-                {booking.location.area},{" "}
-                {booking.location.city}
-              </p>
-
-              <p>
-                <strong>Division:</strong>{" "}
-                {booking.location.division}
+                <strong>Area:</strong> {booking.location.area}, {booking.location.city}
               </p>
 
             </div>
 
             <div className="mt-4 flex gap-3">
+
+              <button
+                onClick={() => setSelectedBooking(booking)}
+                className="flex-1 bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+              >
+                View Details
+              </button>
 
               {booking.status !== "Cancelled" &&
                 booking.status !== "Completed" && (
@@ -124,14 +121,80 @@ export default function MyBookings() {
                   >
                     Cancel
                   </button>
+
                 )}
 
             </div>
 
           </div>
+
         ))}
 
       </div>
+
+      {/* Modal */}
+
+      {selectedBooking && (
+
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+
+          <div className="bg-white rounded-xl p-8 max-w-lg w-full relative">
+
+            <button
+              onClick={() => setSelectedBooking(null)}
+              className="absolute top-3 right-4 text-xl"
+            >
+              ✕
+            </button>
+
+            <h2 className="text-2xl font-bold mb-4">
+              {selectedBooking.serviceName}
+            </h2>
+
+            <div className="space-y-2 text-gray-700">
+
+              <p>
+                <strong>Status:</strong> {selectedBooking.status}
+              </p>
+
+              <p>
+                <strong>Duration:</strong> {selectedBooking.duration} hours
+              </p>
+
+              <p>
+                <strong>Total Cost:</strong> ${selectedBooking.totalCost}
+              </p>
+
+              <p className="font-semibold mt-3">
+                Location
+              </p>
+
+              <p>
+                {selectedBooking.location.address}
+              </p>
+
+              <p>
+                {selectedBooking.location.area}, {selectedBooking.location.city}
+              </p>
+
+              <p>
+                {selectedBooking.location.district}, {selectedBooking.location.division}
+              </p>
+
+            </div>
+
+            <button
+              onClick={() => setSelectedBooking(null)}
+              className="mt-6 w-full bg-blue-600 text-white py-2 rounded"
+            >
+              Close
+            </button>
+
+          </div>
+
+        </div>
+
+      )}
 
     </div>
   );
