@@ -4,7 +4,11 @@ import GoogleProvider from "next-auth/providers/google";
 import { collections, dbConnect } from "./dbConnect";
 
 export const authOptions = {
-  // Configure one or more authentication providers
+  
+   session: {
+    strategy: "jwt"
+  },
+  
   providers: [
     CredentialsProvider({
       // The name to display on the sign in form (e.g. 'Sign in with...')
