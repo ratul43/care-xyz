@@ -30,12 +30,15 @@ export const cancelBooking = async (id) => {
 };
 
 // update booking
-export const updateBooking = async (id) => {
+export const updateBooking = async (id, newStatus) => {
 
   const result = await dbConnect(collections.BOOKINGS).updateOne(
     { _id: new ObjectId(id) },
-    { $set: { status: "Confirmed" } }
+    { $set: { status: newStatus } }
   );
 
-  return result;
+return {
+    success: result.modifiedCount === 1,
+  };
+
 };
