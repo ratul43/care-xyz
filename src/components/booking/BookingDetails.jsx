@@ -3,10 +3,15 @@
 import services from "@/data/services.json";
 import centerHouse from "@/data/centerHouse.json";
 import { useForm, useWatch } from "react-hook-form";
+import { bookingsUser } from "@/actions/server/auth";
+import { useRouter } from "next/navigation";
 
 export default function BookingDetails({ id }) {
 
+  const router = useRouter()
+
   const service = services.find((s) => s.id === id);
+
 
   const {
     register,
@@ -46,7 +51,7 @@ export default function BookingDetails({ id }) {
     return location ? location.covered_area : [];
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
 
     const bookingData = {
       serviceId: service.id,
@@ -63,9 +68,20 @@ export default function BookingDetails({ id }) {
       status: "Pending",
     };
 
-    console.log("Booking Data:", bookingData);
+    // console.log("Booking Data:", bookingData);
 
-    alert("Booking Confirmed! Status: Pending");
+    const result = await bookingsUser(bookingData)
+
+
+
+    
+    if(result){
+          alert("Booking Confirmed! Status: Pending");
+    }
+    else{
+      alert("Give the correct information")
+    }
+
   };
 
   return (
@@ -92,6 +108,7 @@ export default function BookingDetails({ id }) {
             <input
               type="number"
               min="1"
+              max="24"
               {...register("duration")}
               className="w-full border rounded p-2 mt-2"
             />
