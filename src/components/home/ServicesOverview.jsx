@@ -9,7 +9,7 @@ export default function ServicesOverview() {
       description:
         "Professional babysitters who ensure your child’s safety, comfort, and happiness while you focus on your work.",
       image:
-        "https://images.unsplash.com/photo-1519681393784-d120267933ba",
+        "https://softsensbaby.com/cdn/shop/articles/660x660.jpg?v=1628752879",
       features: ["Trained Babysitters", "Safe Environment", "Flexible Booking"]
     },
     {
@@ -27,7 +27,7 @@ export default function ServicesOverview() {
       description:
         "Dedicated caregivers to assist sick family members with proper care, monitoring, and support at home.",
       image:
-        "https://images.unsplash.com/photo-1580281657527-47d48d89b3c5",
+        "https://assets.unileversolutions.com/v1/128064276.jpg",
       features: ["Health Monitoring", "Medication Support", "Home Assistance"]
     }
   ];

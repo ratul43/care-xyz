@@ -11,7 +11,7 @@ export default function Banner() {
       title: "Trusted Care for Your Loved Ones",
       description:
         "Professional babysitters and caregivers ready to support your family with love and responsibility.",
-      image: "https://images.unsplash.com/photo-1581579186913-45ac0e6efe93"
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxhEu8b8naV9p5cGSlauPQjhVcgNaQDadPRg&s"
     },
     {
       id: 2,
@@ -25,7 +25,7 @@ export default function Banner() {
       title: "Safe & Compassionate Home Care",
       description:
         "Book trusted care services easily and ensure safety and comfort for your family.",
-      image: "https://images.unsplash.com/photo-1607746882042-944635dfe10e"
+      image: "https://www.homecare.co.uk/photos/gallery/large/65432245454_1906251154313.jpg"
     }
   ];
 
