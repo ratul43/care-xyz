@@ -5,6 +5,7 @@ import centerHouse from "@/data/centerHouse.json";
 import { useForm, useWatch } from "react-hook-form";
 import { bookingsUser } from "@/actions/server/auth";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 export default function BookingDetails({ id }) {
 
@@ -23,6 +24,9 @@ export default function BookingDetails({ id }) {
       duration: 1
     }
   });
+
+    const { data: session, status } = useSession();
+  
 
   const duration = watch("duration");
 
@@ -56,6 +60,7 @@ export default function BookingDetails({ id }) {
     const bookingData = {
       serviceId: service.id,
       serviceName: service.title,
+      email: session?.user?.email,
       duration: data.duration,
       location: {
         division: data.senderRegion,

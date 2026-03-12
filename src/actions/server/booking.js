@@ -3,6 +3,7 @@
 import { collections, dbConnect } from "@/lib/dbConnect";
 import { ObjectId } from "mongodb";
 
+
 // get all bookings
 export const getBookings = async () => {
 
@@ -16,6 +17,29 @@ export const getBookings = async () => {
     _id: b._id.toString(),
   }));
 };
+
+// get bookings of individual user 
+
+export const getSingleBookings = async (userEmail) => {
+  const bookings = await dbConnect(collections.BOOKINGS)
+    .find({ email: userEmail })
+    .toArray();
+
+    console.log(bookings);
+
+  // ✅ Serialize ObjectId and any Date fields before returning
+  return bookings.map((booking) => ({
+    ...booking,
+    _id: booking._id.toString(),
+    
+  }));
+};
+
+
+
+
+
+
 
 
 // cancel booking

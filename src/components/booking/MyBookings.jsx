@@ -1,6 +1,8 @@
 "use client";
 
-import { cancelBooking, getBookings } from "@/actions/server/booking";
+import { cancelBooking, getSingleBookings } from "@/actions/server/booking";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const STATUS_STYLE = {
@@ -11,100 +13,87 @@ const STATUS_STYLE = {
 };
 
 export default function MyBookings() {
-
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedBooking, setSelectedBooking] = useState(null);
 
+  const router = useRouter();
+  // ✅ Destructure status from useSession — it's never null/undefined
+  const { data: session, status } = useSession();
+
   useEffect(() => {
+    // ✅ Wait until session is resolved before doing anything
+    if (status === "loading") return;
+
+    // ✅ Redirect if not authenticated
+    if (status === "unauthenticated") {
+      router.push("/login");
+      return;
+    }
+
+    // ✅ Only fetch when we have the email
     const loadBookings = async () => {
-      const data = await getBookings();
+      const data = await getSingleBookings(session?.user?.email);
       setBookings(data);
       setLoading(false);
     };
 
     loadBookings();
-  }, []);
+  }, [status]); // ✅ Re-run when session status changes
 
   const handleCancel = async (id) => {
-
-    const confirm = window.confirm("Cancel this booking?");
-
-    if (!confirm) return;
+    const confirmed = window.confirm("Cancel this booking?");
+    if (!confirmed) return;
 
     const success = await cancelBooking(id);
 
     if (success) {
       setBookings((prev) =>
         prev.map((b) =>
-          b._id === id ? { ...b, status: "Cancelled" } : b
+          // ✅ Convert ObjectId to string for safe comparison
+          b._id.toString() === id.toString() ? { ...b, status: "Cancelled" } : b
         )
       );
     }
   };
 
-  if (loading) {
+  // ✅ Show loader while session OR bookings are loading
+  if (status === "loading" || loading) {
     return (
-      <div className="text-center py-20 text-lg">
-        Loading bookings...
-      </div>
+      <div className="text-center py-20 text-lg">Loading bookings...</div>
     );
   }
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-16">
-
-      <h1 className="text-3xl font-bold mb-10">
-        My Bookings
-      </h1>
+      <h1 className="text-3xl font-bold mb-10">My Bookings</h1>
 
       {bookings.length === 0 && (
-        <div className="text-center text-gray-400 py-20">
-          No bookings yet.
-        </div>
+        <div className="text-center text-gray-400 py-20">No bookings yet.</div>
       )}
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-
         {bookings.map((booking) => (
-
           <div
             key={booking._id}
             className="border rounded-xl p-6 shadow-sm hover:shadow-md transition"
           >
-
             <div className="flex justify-between items-center mb-3">
-
-              <h2 className="font-semibold text-lg">
-                {booking.serviceName}
-              </h2>
-
+              <h2 className="font-semibold text-lg">{booking.serviceName}</h2>
               <span
                 className={`px-2 py-1 text-xs rounded ${STATUS_STYLE[booking.status]}`}
               >
                 {booking.status}
               </span>
-
             </div>
 
             <div className="text-sm space-y-1 text-gray-600">
-
-              <p>
-                <strong>Duration:</strong> {booking.duration} hours
-              </p>
-
-              <p>
-                <strong>Total Cost:</strong> ${booking.totalCost}
-              </p>
-
-              <p>
-                <strong>Area:</strong> {booking.location.area}, {booking.location.city}
-              </p>
-
+              <p><strong>Duration:</strong> {booking.duration} hours</p>
+              <p><strong>Total Cost:</strong> ${booking.totalCost}</p>
+              <p><strong>Area:</strong> {booking.location.area}, {booking.location.city}</p>
             </div>
 
             <div className="mt-4 flex gap-3">
-
               <button
                 onClick={() => setSelectedBooking(booking)}
                 className="flex-1 bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
@@ -112,34 +101,23 @@ export default function MyBookings() {
                 View Details
               </button>
 
-              {booking.status !== "Cancelled" &&
-                booking.status !== "Completed" && (
-
-                  <button
-                    onClick={() => handleCancel(booking._id)}
-                    className="flex-1 bg-red-500 text-white py-2 rounded hover:bg-red-600"
-                  >
-                    Cancel
-                  </button>
-
-                )}
-
+              {booking.status !== "Cancelled" && booking.status !== "Completed" && (
+                <button
+                  onClick={() => handleCancel(booking._id)}
+                  className="flex-1 bg-red-500 text-white py-2 rounded hover:bg-red-600"
+                >
+                  Cancel
+                </button>
+              )}
             </div>
-
           </div>
-
         ))}
-
       </div>
 
       {/* Modal */}
-
       {selectedBooking && (
-
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-
           <div className="bg-white rounded-xl p-8 max-w-lg w-full relative">
-
             <button
               onClick={() => setSelectedBooking(null)}
               className="absolute top-3 right-4 text-xl"
@@ -152,35 +130,14 @@ export default function MyBookings() {
             </h2>
 
             <div className="space-y-2 text-gray-700">
+              <p><strong>Status:</strong> {selectedBooking.status}</p>
+              <p><strong>Duration:</strong> {selectedBooking.duration} hours</p>
+              <p><strong>Total Cost:</strong> ${selectedBooking.totalCost}</p>
 
-              <p>
-                <strong>Status:</strong> {selectedBooking.status}
-              </p>
-
-              <p>
-                <strong>Duration:</strong> {selectedBooking.duration} hours
-              </p>
-
-              <p>
-                <strong>Total Cost:</strong> ${selectedBooking.totalCost}
-              </p>
-
-              <p className="font-semibold mt-3">
-                Location
-              </p>
-
-              <p>
-                {selectedBooking.location.address}
-              </p>
-
-              <p>
-                {selectedBooking.location.area}, {selectedBooking.location.city}
-              </p>
-
-              <p>
-                {selectedBooking.location.district}, {selectedBooking.location.division}
-              </p>
-
+              <p className="font-semibold mt-3">Location</p>
+              <p>{selectedBooking.location.address}</p>
+              <p>{selectedBooking.location.area}, {selectedBooking.location.city}</p>
+              <p>{selectedBooking.location.district}, {selectedBooking.location.division}</p>
             </div>
 
             <button
@@ -189,13 +146,9 @@ export default function MyBookings() {
             >
               Close
             </button>
-
           </div>
-
         </div>
-
       )}
-
     </div>
   );
 }

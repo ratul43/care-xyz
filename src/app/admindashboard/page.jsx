@@ -7,8 +7,6 @@ import Swal from "sweetalert2";
 const STATUS_OPTIONS = [
   "Pending",
   "Confirmed",
-  "Assigned",
-  "On The Way",
   "Completed",
   "Cancelled",
 ];
@@ -58,11 +56,11 @@ export default function AdminBookings() {
           <thead className="bg-gray-100">
 
             <tr>
-              <th className="p-3 text-left">Service</th>
-              <th className="p-3 text-left">User Location</th>
-              <th className="p-3 text-left">Duration</th>
-              <th className="p-3 text-left">Cost</th>
-              <th className="p-3 text-left">Status</th>
+              <th className="p-3 text-black text-left">Service</th>
+              <th className="p-3 text-black text-left">User Location</th>
+              <th className="p-3 text-black text-left">Duration</th>
+              <th className="p-3 text-black text-left">Cost</th>
+              <th className="p-3 text-black text-left">Status</th>
             </tr>
 
           </thead>
