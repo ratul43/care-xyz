@@ -2,6 +2,7 @@ import services from "@/data/services.json";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import BookButton from "../buttons/BookButton";
+import Image from "next/image";
 
 export  default async function ServiceDetails({ id }) {
 
@@ -20,8 +21,10 @@ export  default async function ServiceDetails({ id }) {
 
       <div className="grid md:grid-cols-2 gap-10 items-center">
 
-        <img
+        <Image
           src={service.image}
+          width={500}
+      height={500}
           alt={service.title}
           className="rounded-xl shadow-lg w-full h-[420px] object-cover"
         />
