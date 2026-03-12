@@ -5,6 +5,8 @@ import { collections, dbConnect } from "./dbConnect";
 
 export const authOptions = {
   
+      secret: process.env.NEXTAUTH_SECRET,
+
    session: {
     strategy: "jwt"
   },
@@ -31,6 +33,7 @@ export const authOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
+
 
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {

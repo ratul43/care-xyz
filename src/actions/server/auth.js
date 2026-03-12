@@ -73,4 +73,18 @@ export const bookingsUser = async (data) => {
     };
 }
 
-
+export const isAdmin = async (userMail) => {
+  try {
+    if (!userMail) return null;
+    
+    const result = await dbConnect(collections.USERS).findOne({
+      email: userMail, 
+      role: "admin"
+    });
+    
+    return result;
+  } catch (error) {
+    console.error("Admin check failed:", error);
+    return null;
+  }
+};

@@ -1,6 +1,8 @@
 "use client";
 
+import { isAdmin } from "@/actions/server/auth";
 import { getBookings, updateBooking } from "@/actions/server/booking";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
@@ -11,7 +13,14 @@ const STATUS_OPTIONS = [
   "Cancelled",
 ];
 
-export default function AdminBookings() {
+export default  function AdminBookings() {
+
+  const session = useSession() 
+
+  // const res = await isAdmin()
+
+
+  console.log(session);
 
   const [bookings, setBookings] = useState([]);
 

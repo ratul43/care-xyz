@@ -25,7 +25,6 @@ export const getSingleBookings = async (userEmail) => {
     .find({ email: userEmail })
     .toArray();
 
-    console.log(bookings);
 
   // ✅ Serialize ObjectId and any Date fields before returning
   return bookings.map((booking) => ({
