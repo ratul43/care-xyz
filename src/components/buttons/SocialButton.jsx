@@ -1,7 +1,7 @@
 import { signIn } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
 import React from 'react';
-import { FaGoogle } from 'react-icons/fa';
+import { FcGoogle } from "react-icons/fc";
 import Swal from 'sweetalert2';
 
 const SocialButton = () => {
@@ -27,17 +27,15 @@ const SocialButton = () => {
 
 
     return (
-        <div>
-            <div className="flex gap-3 mt-4">
+       <div className="flex gap-3 mt-4">
       <button
         onClick={handleSignIn}
-        className="btn btn-outline cursor-pointer bg-amber-500 btn-error flex-1"
+        className="w-full flex items-center justify-center gap-2 bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition duration-200 cursor-pointer"
       >
-        <FaGoogle className="text-lg" />
-        Google
+        <FcGoogle className="text-lg" />
+        Sign in with Google
       </button>
     </div>
-        </div>
     );
 };
 

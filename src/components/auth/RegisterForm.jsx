@@ -3,14 +3,23 @@
 import { postUser } from "@/actions/server/auth";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaEye } from "react-icons/fa";
 import { IoEyeOff } from "react-icons/io5";
 
 export default function RegisterForm() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <RegisterFormContent />
+    </Suspense>
+  )
 
-    const [show, setShow] = useState(false);
+  }
+
+  function RegisterFormContent (){
+
+     const [show, setShow] = useState(false);
 
     const router = useRouter()
 
@@ -42,6 +51,10 @@ export default function RegisterForm() {
 
     
   };
+
+
+
+   
 
   return (
     <div className="max-w-md mt-20 mx-auto p-8 bg-white shadow  rounded-lg">
@@ -182,4 +195,4 @@ export default function RegisterForm() {
       </form>
     </div>
   );
-}
+ }

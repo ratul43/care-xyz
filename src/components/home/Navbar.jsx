@@ -48,42 +48,9 @@ export default function Navbar() {
         {/* Desktop Menu */}
         <div className="hidden md:flex gap-8 items-center text-gray-700 font-medium">
           {navLinks}
+                <AuthButtons> </AuthButtons>
 
-          <AuthButtons> </AuthButtons>
 
-          {/* {!session ? (
-            <>
-              <Link
-                href="/login"
-                className="px-4 py-2 border rounded-lg hover:bg-gray-100"
-              >
-                Login
-              </Link>
-
-              <Link
-                href="/register"
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-              >
-                Register
-              </Link>
-            </>
-          ) : (
-            <div className="flex items-center gap-3">
-              <img
-              src=""
-                // src={session.user.image}
-                alt="user"
-                className="w-8 h-8 rounded-full"
-              />
-
-              <button
-                // onClick={() => signOut()}
-                className="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600"
-              >
-                Logout
-              </button>
-            </div>
-          )} */}
         </div>
 
         {/* Mobile Menu Button */}
