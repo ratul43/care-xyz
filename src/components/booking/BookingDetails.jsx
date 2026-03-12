@@ -77,6 +77,7 @@ export default function BookingDetails({ id }) {
     
     if(result){
           alert("Booking Confirmed! Status: Pending");
+          router.push("/my-bookings")
     }
     else{
       alert("Give the correct information")
