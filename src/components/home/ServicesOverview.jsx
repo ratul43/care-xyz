@@ -69,7 +69,7 @@ export default function ServicesOverview() {
               {/* Content */}
               <div className="p-6">
 
-                <h3 className="text-xl font-semibold mb-3">
+                <h3 className="text-xl text-black font-semibold mb-3">
                   {service.title}
                 </h3>
 

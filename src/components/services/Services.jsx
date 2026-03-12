@@ -1,13 +1,10 @@
 import Link from "next/link";
 import services from "@/data/services.json";
 
-
 export const metadata = {
   title: "Services",
-
   description:
     "Explore all home services available on Carexyz including baby care, cleaning, and home maintenance.",
-
   openGraph: {
     title: "Carexyz Services",
     description:
@@ -22,11 +19,6 @@ export const metadata = {
   },
 };
 
-
-
-
-
-
 export default function Services() {
   return (
     <section className="py-20 bg-blue-100">
@@ -39,38 +31,38 @@ export default function Services() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
 
           {services.map((service) => (
-            <div key={service.id} className="space-y-4">
+            <div key={service.id} className="flex flex-col h-full">
 
               {/* Image */}
               <div className="group relative overflow-hidden rounded-lg">
                 <img
                   src={service.image}
                   alt={service.title}
-                  className="h-64 w-full object-cover group-hover:scale-110 transition duration-500"
+                  className="h-56 w-full object-cover group-hover:scale-110 transition duration-500"
                 />
               </div>
 
               {/* Card */}
-              <div className="bg-white p-8 text-center rounded-lg shadow-md hover:shadow-xl transition">
+              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition flex flex-col flex-grow">
 
                 <div className="text-blue-600 text-4xl mb-4">
                   {service.icon}
                 </div>
 
-                <h3 className="text-xl font-semibold mb-3">
+                <h3 className="text-xl text-black font-semibold mb-3">
                   {service.title}
                 </h3>
 
-                <p className="text-gray-600 mb-5">
+                <p className="text-gray-600 mb-6 flex-grow">
                   {service.description}
                 </p>
 
                 <Link
                   href={`/services/${service.id}`}
-                  className="text-blue-600 font-semibold hover:underline"
+                  className="text-blue-600 font-semibold hover:underline mt-auto"
                 >
                   View Details →
                 </Link>
@@ -81,6 +73,7 @@ export default function Services() {
           ))}
 
         </div>
+
       </div>
     </section>
   );

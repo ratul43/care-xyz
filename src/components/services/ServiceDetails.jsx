@@ -6,56 +6,56 @@ import Image from "next/image";
 import { getSingleService } from "@/actions/server/service";
 
 
-// export async function generateMetadata({ params }) {
-//   const serviceId = params.id;
+export async function generateMetadata({ params }) {
+  const serviceId = params.id;
 
 
-//   const service = await getSingleService(serviceId)
+  const service = await getSingleService(serviceId)
 
-//   console.log(service);
+  console.log(service);
 
-//   return {
-//     title: service.title,
+  return {
+    title: service.title,
 
-//     description: service.description,
+    description: service.description,
 
-//     keywords: [
-//       service.title,
-//       "home services",
-//       "book service",
-//       "professional home services",
-//       "CareNest services",
-//     ],
+    keywords: [
+      service.title,
+      "home services",
+      "book service",
+      "professional home services",
+      "CareNest services",
+    ],
 
-//     openGraph: {
-//       title: service.title,
-//       description: service.description,
-//       url: `https://care-xyz-orcin.vercel.app/${serviceId}`,
-//       siteName: "CareNest",
-//       images: [
-//         {
-//           url: "https://i.ibb.co.com/CLLGZxr/service-details.png",
-//           width: 1200,
-//           height: 630,
-//           alt: service.title,
-//         },
-//       ],
-//       locale: "en_US",
-//       type: "website",
-//     },
+    openGraph: {
+      title: service.title,
+      description: service.description,
+      url: `https://care-xyz-orcin.vercel.app/${serviceId}`,
+      siteName: "CareNest",
+      images: [
+        {
+          url: "https://i.ibb.co.com/CLLGZxr/service-details.png",
+          width: 1200,
+          height: 630,
+          alt: service.title,
+        },
+      ],
+      locale: "en_US",
+      type: "website",
+    },
 
-//     twitter: {
-//       card: "summary_large_image",
-//       title: service.title,
-//       description: service.description,
-//       images: ["https://i.ibb.co.com/CLLGZxr/service-details.png"],
-//     },
+    twitter: {
+      card: "summary_large_image",
+      title: service.title,
+      description: service.description,
+      images: ["https://i.ibb.co.com/CLLGZxr/service-details.png"],
+    },
 
-//     alternates: {
-//       canonical: `https://care-xyz-orcin.vercel.app/${serviceId}`,
-//     },
-//   };
-// }
+    alternates: {
+      canonical: `https://care-xyz-orcin.vercel.app/${serviceId}`,
+    },
+  };
+}
 
 
 
