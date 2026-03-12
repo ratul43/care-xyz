@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { FaBars, FaTimes } from "react-icons/fa";
+import AuthButtons from "../buttons/AuthButtons";
 
 export default function Navbar() {
 //   const { data: session } = useSession();
@@ -47,6 +48,8 @@ export default function Navbar() {
         {/* Desktop Menu */}
         <div className="hidden md:flex gap-8 items-center text-gray-700 font-medium">
           {navLinks}
+
+          <AuthButtons> </AuthButtons>
 
           {/* {!session ? (
             <>
@@ -94,6 +97,8 @@ export default function Navbar() {
         <div className="md:hidden flex flex-col gap-4 px-6 pb-6 text-gray-700 font-medium">
 
           {navLinks}
+
+  <AuthButtons></AuthButtons>          
 
           {/* {!session ? (
             <>

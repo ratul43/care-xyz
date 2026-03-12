@@ -6,7 +6,7 @@ import { collections, dbConnect } from "@/lib/dbConnect";
 
 
 export const postUser = async (payload) => {
-  const { email, password, name } = payload;
+  const { email, password, name, contact, nid } = payload;
   // check payload
   if (!email || !password) return null;
 
@@ -19,11 +19,12 @@ export const postUser = async (payload) => {
   // create user
 
   const newUser = {
-    providerId: "credentials",
+    provider: "credentials",
     name,
     email,
     password: await bcrypt.hash(password, 14),
-    role: "user",
+    contact, 
+    nid 
   };
 
   // insert user
@@ -37,3 +38,31 @@ export const postUser = async (payload) => {
     };
   }
 };
+
+export const loginUser = async (payload) => {
+
+      const { email, password, name } = payload;
+
+
+      if (!email || !password) return null;
+
+    const user = await dbConnect(collections.USERS).findOne({ email });
+    
+    if(!user) return null 
+
+    const isMatched = await bcrypt.compare(password, user.password)
+
+    if(isMatched){
+        return user
+    }
+    else{
+        return null 
+    }
+
+
+}
+
+
+
+
+

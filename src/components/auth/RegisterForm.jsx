@@ -1,6 +1,8 @@
 "use client";
 
 import { postUser } from "@/actions/server/auth";
+import { signIn } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaEye } from "react-icons/fa";
@@ -10,6 +12,13 @@ export default function RegisterForm() {
 
     const [show, setShow] = useState(false);
 
+    const router = useRouter()
+
+      const params = useSearchParams();
+
+      const callBackUrl = params.get("callbackUrl") || ""
+
+    
 
   const {
     register,
@@ -21,8 +30,14 @@ export default function RegisterForm() {
     
         const result = await postUser(data);
 
-        if(result){
-            alert("Registration Successful");
+        if(result.acknowledged){
+          // router.push("/login")
+          
+          const result = await signIn("credentials", {email: data.email, password: data.password, 
+            callbackUrl: callBackUrl
+          })
+          
+          alert("Registration Successful");
         }
 
     
@@ -139,7 +154,7 @@ export default function RegisterForm() {
           <label className="font-semibold text-black">NID No</label>
 
           <input
-            type="text"
+           pattern="[0-9]*" inputMode="numeric" maxLength="20"
             {...register("nid", {
               required: "NID is required"
             })}

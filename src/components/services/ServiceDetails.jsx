@@ -1,6 +1,7 @@
 import services from "@/data/services.json";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import BookButton from "../buttons/BookButton";
 
 export  default async function ServiceDetails({ id }) {
 
@@ -79,12 +80,7 @@ export  default async function ServiceDetails({ id }) {
             </div>
           </div>
 
-          <Link
-            href={`/booking/${service.id}`}
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
-          >
-            Book This Service
-          </Link>
+         <BookButton id={service.id}></BookButton>
 
         </div>
       </div>
