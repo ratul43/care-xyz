@@ -28,3 +28,14 @@ export const cancelBooking = async (id) => {
 
   return result.modifiedCount === 1;
 };
+
+// update booking
+export const updateBooking = async (id) => {
+
+  const result = await dbConnect(collections.BOOKINGS).updateOne(
+    { _id: new ObjectId(id) },
+    { $set: { status: "Confirmed" } }
+  );
+
+  return result;
+};
