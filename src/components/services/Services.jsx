@@ -1,6 +1,32 @@
 import Link from "next/link";
 import services from "@/data/services.json";
 
+
+export const metadata = {
+  title: "Services",
+
+  description:
+    "Explore all home services available on Carexyz including baby care, cleaning, and home maintenance.",
+
+  openGraph: {
+    title: "Carexyz Services",
+    description:
+      "Browse all available home services and book professionals easily.",
+    images: [
+      {
+        url: "https://i.ibb.co.com/XxsmCD91/servicespage.png",
+        width: 1200,
+        height: 630,
+      },
+    ],
+  },
+};
+
+
+
+
+
+
 export default function Services() {
   return (
     <section className="py-20 bg-blue-100">
