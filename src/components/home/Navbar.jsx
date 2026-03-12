@@ -5,41 +5,36 @@ import { useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import AuthButtons from "../buttons/AuthButtons";
+import NavLink from "../buttons/Navlink";
 
 export default function Navbar() {
-//   const { data: session } = useSession();
+  const { data: session } = useSession();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
   const navLinks = (
-    <>
-      <Link href="/" className="hover:text-blue-600">Home</Link>
+    <nav className="flex space-x-4">
+      <NavLink href="/">Home</NavLink>
 
-      <Link href="/services/baby-care" className="hover:text-blue-600">
-        Baby Care
-      </Link>
+      <NavLink href="/services" className="hover:text-blue-600">
+        Services
+      </NavLink>
 
-      <Link href="/services/elderly-care" className="hover:text-blue-600">
-        Elderly Care
-      </Link>
+      <NavLink href="/services/baby-care">Baby Care</NavLink>
 
-      <Link href="/services/sick-care" className="hover:text-blue-600">
-        Sick Care
-      </Link>
+      <NavLink href="/services/elderly-care">Elderly Care</NavLink>
 
-      {/* {session && (
-        <Link href="/my-bookings" className="hover:text-blue-600">
-          My Bookings
-        </Link>
-      )} */}
-    </>
+      <NavLink href="/services/sick-care">Sick Care</NavLink>
+
+      {session && <NavLink href="/my-bookings">My Bookings</NavLink>}
+      
+    </nav>
   );
 
   return (
     <nav className="bg-white shadow-md w-full">
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-
         {/* Logo */}
         <Link href="/" className="text-2xl font-bold text-blue-600">
           Care.xyz
@@ -48,9 +43,7 @@ export default function Navbar() {
         {/* Desktop Menu */}
         <div className="hidden md:flex gap-8 items-center text-gray-700 font-medium">
           {navLinks}
-                <AuthButtons> </AuthButtons>
-
-
+          <AuthButtons> </AuthButtons>
         </div>
 
         {/* Mobile Menu Button */}
@@ -62,10 +55,9 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {menuOpen && (
         <div className="md:hidden flex flex-col gap-4 px-6 pb-6 text-gray-700 font-medium">
-
           {navLinks}
 
-  <AuthButtons></AuthButtons>          
+          <AuthButtons></AuthButtons>
 
           {/* {!session ? (
             <>
