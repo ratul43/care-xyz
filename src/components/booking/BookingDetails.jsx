@@ -6,6 +6,7 @@ import { useForm, useWatch } from "react-hook-form";
 import { bookingsUser } from "@/actions/server/auth";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { sendBookingEmail } from "@/actions/server/email";
 
 export default function BookingDetails({ id }) {
 
@@ -56,39 +57,38 @@ export default function BookingDetails({ id }) {
   };
 
   const onSubmit = async (data) => {
-
-    const bookingData = {
-      serviceId: service.id,
-      serviceName: service.title,
-      email: session?.user?.email,
-      duration: data.duration,
-      location: {
-        division: data.senderRegion,
-        district: data.senderDistrict,
-        city: data.senderDistrict,
-        area: data.senderArea,
-        address: data.address,
-      },
-      totalCost,
-      status: "Pending",
-    };
-
-    // console.log("Booking Data:", bookingData);
-
-    const result = await bookingsUser(bookingData)
-
-
-
-    
-    if(result){
-          alert("Booking Confirmed! Status: Pending");
-          router.push("/my-bookings")
-    }
-    else{
-      alert("Give the correct information")
-    }
-
+  const bookingData = {
+    serviceId: service.id,
+    serviceName: service.title,
+    email: session?.user?.email,
+    duration: data.duration,
+    location: {
+      division: data.senderRegion,
+      district: data.senderDistrict,
+      city: data.senderDistrict,
+      area: data.senderArea,
+      address: data.address,
+    },
+    totalCost,
+    status: "Pending",
   };
+
+  const result = await bookingsUser(bookingData);
+
+  if (result) {
+    await sendBookingEmail({
+      to: session?.user?.email, 
+      orderId: result.insertedId.toString(),
+      bookingData,
+      totalCost,
+    });
+
+    alert("Booking Confirmed! Status: Pending");
+    router.push("/my-bookings");
+  } else {
+    alert("Give the correct information");
+  }
+};
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-16">
