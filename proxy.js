@@ -5,6 +5,7 @@ const privateRoute = ["/admindashboard", "/my-bookings", "/booking"];
 
 export async function proxy(req) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+  console.log(token);
   const reqPath = req.nextUrl.pathname;
 
   const isAuthenticated = Boolean(token);
