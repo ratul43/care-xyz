@@ -6,7 +6,7 @@ import { orderInvoiceTemplate } from "@/lib/orderInvoice";
 export const sendBookingEmail = async ({ to, orderId, bookingData, totalCost }) => {
   await sendEmail({
     to,
-    subject: "Your Booking Invoice - Hero Kidz",
+    subject: "Your Booking Invoice - Carexyz",
     html: orderInvoiceTemplate({
       orderId,
       data: `

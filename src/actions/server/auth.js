@@ -82,7 +82,11 @@ export const isAdmin = async (userMail) => {
       role: "admin"
     });
     
-    return result;
+    // MongoDB document কে plain object-এ convert করুন
+    const plainResult = result ? JSON.parse(JSON.stringify(result)) : null;
+    
+    console.log(plainResult);
+    return plainResult;
   } catch (error) {
     console.error("Admin check failed:", error);
     return null;

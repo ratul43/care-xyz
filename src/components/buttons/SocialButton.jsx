@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 const SocialButton = () => {
     const params = useSearchParams()
 
-    console.log(params.get("callbackUrl") || "/");
+    // console.log(params.get("callbackUrl") || "/");
 
     const handleSignIn = async () => {
         await signIn(

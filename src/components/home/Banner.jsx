@@ -73,7 +73,7 @@ export default function Banner() {
               </p>
 
               <Link
-                href="/service/baby-care"
+                href="/services"
                 className="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-semibold"
               >
                 Book a Care Service

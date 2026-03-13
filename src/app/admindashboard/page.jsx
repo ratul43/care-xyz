@@ -3,6 +3,7 @@
 import { isAdmin } from "@/actions/server/auth";
 import { getBookings, updateBooking } from "@/actions/server/booking";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
@@ -13,25 +14,31 @@ const STATUS_OPTIONS = [
   "Cancelled",
 ];
 
-export default  function AdminBookings() {
-
-  const session = useSession() 
-
-  // const res = await isAdmin()
-
-
-  console.log(session);
+export default function AdminBookings() {
 
   const [bookings, setBookings] = useState([]);
 
+  const [loading, setLoading] = useState(true)
+
+  const router = useRouter()
+
+  const {data: session} = useSession()
+  // console.log(session);
+
   useEffect(() => {
     const loadBookings = async () => {
+      const result = await isAdmin(session?.user?.email)
+      if(!result) {
+        return  router.push("/")
+      }
+
       const data = await getBookings();
+      setLoading(false)
       setBookings(data);
     };
 
     loadBookings();
-  }, []);
+  }, [session?.user?.email, router]);
 
   const handleStatusChange = async (id, newStatus) => {
 
@@ -51,7 +58,14 @@ export default  function AdminBookings() {
 
   };
 
-  return (
+  if(loading) return <div className="flex flex-col min-h-screen justify-center items-center gap-5">
+        <h2 className='text-5xl font-bold animate-pulse'> Loading </h2>
+        
+      
+    </div>
+
+  if(bookings){
+     return (
     <div className="max-w-6xl mx-auto px-6 py-16">
 
       <h1 className="text-3xl font-bold mb-10">
@@ -131,4 +145,10 @@ export default  function AdminBookings() {
 
     </div>
   );
+  }
+
+  return(<>
+  No data to show
+  </>)
+ 
 }
