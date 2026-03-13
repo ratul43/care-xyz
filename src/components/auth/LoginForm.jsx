@@ -32,18 +32,33 @@ function LoginFormContent() {
   const router = useRouter();
 
   const onSubmit = async (data) => {
-    const result = await signIn("credentials", {
-      email: data.email,
-      password: data.password,
-      callbackUrl: params.get("callbackUrl") || "/",
-    });
+  const result = await signIn("credentials", {
+    email: data.email,
+    password: data.password,
+    redirect: false, 
+    callbackUrl: params.get("callbackUrl") || "/",
+  });
 
-    if (!result.ok) {
-      Swal.fire("error", "Unauthorized access", "error");
-    } else {
-      Swal.fire("success", "Welcome", "success");
-    }
-  };
+  if (result.error) {
+    Swal.fire({
+      position: "top",
+      icon: "error",
+      title: "Unauthorized access",
+      showConfirmButton: false,
+      timer: 1000,
+    });
+  } else if (result.ok) {
+    Swal.fire({
+      position: "top",
+      icon: "success", 
+      title: "Login Successful",
+      showConfirmButton: false,
+      timer: 1000,
+    }).then(() => {
+      router.push(result.url || "/");
+    });
+  }
+};
 
   return (
     <div className="max-w-md mx-auto p-8 bg-white mt-20 shadow-lg rounded-lg">

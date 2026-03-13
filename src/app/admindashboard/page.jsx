@@ -29,7 +29,7 @@ export default function AdminBookings() {
       }
 
       if (!session?.user?.email) {
-        router.push("/login?callbackUrl=/admin/bookings");
+        router.push("/login?callbackUrl=/");
         return;
       }
 
