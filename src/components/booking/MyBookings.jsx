@@ -33,13 +33,19 @@ export default function MyBookings() {
 
     // ✅ Only fetch when we have the email
     const loadBookings = async () => {
-      const data = await getSingleBookings(session?.user?.email);
-      setBookings(data);
-      setLoading(false);
+      try {
+        const data = await getSingleBookings(session.user.email);
+        setBookings(Array.isArray(data) ? data : []);
+      } catch (error) {
+        console.error("Failed to load bookings:", error);
+        setBookings([]);
+      } finally {
+        setLoading(false);
+      }
     };
 
     loadBookings();
-  }, [status]); // ✅ Re-run when session status changes
+  }, [status, session?.user?.email, router]);
 
   const handleCancel = async (id) => {
     const confirmed = window.confirm("Cancel this booking?");

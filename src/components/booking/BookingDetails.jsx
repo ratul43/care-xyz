@@ -84,20 +84,34 @@ export default function BookingDetails({ id }) {
       status: "Pending",
     };
 
+    if (!session?.user?.email) {
+      Swal.fire("error", "Please log in to book a service.", "error");
+      router.push("/login");
+      return;
+    }
+
     const result = await bookingsUser(bookingData);
 
     if (result?.insertedId) {
-      await sendBookingEmail({
-        to: session?.user?.email,
-        orderId: result.insertedId.toString(),
-        bookingData,
-        totalCost,
-      });
+      try {
+        await sendBookingEmail({
+          to: session.user.email,
+          orderId: result.insertedId,
+          bookingData,
+          totalCost,
+        });
+      } catch (emailError) {
+        console.error("Booking email failed:", emailError);
+      }
 
-      Swal.fire("success","Booking Confirmed! Status: Pending", "success");
+      Swal.fire("success", "Booking Confirmed! Status: Pending", "success");
       router.push("/my-bookings");
     } else {
-      Swal.fire("error","Something went wrong. Please check your information.", "error");
+      Swal.fire(
+        "error",
+        "Something went wrong. Please check your information.",
+        "error",
+      );
     }
   };
 

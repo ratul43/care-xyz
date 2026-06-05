@@ -54,13 +54,25 @@ export const loginUser = async (payload) => {
 };
 
 export const bookingsUser = async (data) => {
-  const db = await connectDB()
-  const result = await db.collection("bookings").insertOne(data);
+  try {
+    if (!data?.email) return null;
 
-  return {
-    ...result,
-    insertedId: result.insertedId.toString(),
-  };
+    const db = await connectDB();
+    const result = await db.collection("bookings").insertOne({
+      ...data,
+      createdAt: new Date(),
+    });
+
+    if (!result.acknowledged) return null;
+
+    return {
+      acknowledged: result.acknowledged,
+      insertedId: result.insertedId.toString(),
+    };
+  } catch (error) {
+    console.error("bookingsUser error:", error);
+    return null;
+  }
 };
 
 export const isAdmin = async (userMail) => {
