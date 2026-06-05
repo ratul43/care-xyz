@@ -8,7 +8,7 @@ import AuthButtons from "../buttons/AuthButtons";
 import NavLink from "../buttons/Navlink";
 
 export default function Navbar() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
@@ -27,7 +27,9 @@ export default function Navbar() {
 
       <NavLink href="/services/sick-care">Sick Care</NavLink>
 
-      {session && <NavLink href="/my-bookings">My Bookings</NavLink>}
+      {status === "authenticated" && (
+        <NavLink href="/my-bookings">My Bookings</NavLink>
+      )}
       
     </nav>
   );

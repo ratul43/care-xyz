@@ -31,7 +31,12 @@ export const authOptions = {
 
           if (!isMatched) return null;
 
-          return user;
+          return {
+            id: user._id.toString(),
+            name: user.name,
+            email: user.email,
+            image: user.image ?? null,
+          };
         } catch (err) {
           console.log("LOGIN ERROR:", err);
           return null;
@@ -77,7 +82,7 @@ export const authOptions = {
 
     async jwt({ token, user }) {
       if (user) {
-        token.id = user._id;
+        token.id = user.id;
       }
       return token;
     },

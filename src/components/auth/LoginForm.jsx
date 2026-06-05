@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import Link from "next/link";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Swal from "sweetalert2";
 import { useRouter, useSearchParams } from "next/navigation";
 import SocialButton from "../buttons/SocialButton";
@@ -30,35 +30,40 @@ function LoginFormContent() {
   const params = useSearchParams();
   const callBack = params.get("callbackUrl") || "/";
   const router = useRouter();
+  const { update } = useSession();
 
   const onSubmit = async (data) => {
-  const result = await signIn("credentials", {
-    email: data.email,
-    password: data.password,
-    redirect: false, 
-    callbackUrl: params.get("callbackUrl") || "/",
-  });
+    const result = await signIn("credentials", {
+      email: data.email,
+      password: data.password,
+      redirect: false,
+      callbackUrl: callBack,
+    });
 
-  if (result.error) {
-    Swal.fire({
-      position: "top",
-      icon: "error",
-      title: "Unauthorized access",
-      showConfirmButton: false,
-      timer: 1000,
-    });
-  } else if (result.ok) {
-    Swal.fire({
-      position: "top",
-      icon: "success", 
-      title: "Login Successful",
-      showConfirmButton: false,
-      timer: 1000,
-    }).then(() => {
-      router.push(result.url || "/");
-    });
-  }
-};
+    if (result?.error) {
+      Swal.fire({
+        position: "top",
+        icon: "error",
+        title: "Unauthorized access",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      return;
+    }
+
+    if (result?.ok) {
+      await update();
+      await Swal.fire({
+        position: "top",
+        icon: "success",
+        title: "Login Successful",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      router.refresh();
+      router.push(callBack);
+    }
+  };
 
   return (
     <div className="max-w-md mx-auto p-8 bg-white mt-20 shadow-lg rounded-lg">

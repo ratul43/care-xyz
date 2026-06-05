@@ -5,29 +5,29 @@ import React from 'react';
 import Swal from 'sweetalert2';
 
 const AuthButtons = () => {
-    const session = useSession();
+    const { data: session, status, update } = useSession();
 
     const handleLogout = async () => {
-        await signOut({ redirect: false }); // Don't redirect immediately
-        
-        Swal.fire({
+        await signOut({ redirect: false });
+        await update();
+
+        await Swal.fire({
             icon: 'success',
             title: 'Logged Out',
             text: 'You have been successfully logged out!',
             timer: 1500,
             showConfirmButton: false
-        }).then(() => {
-            // Redirect after SweetAlert closes
-            window.location.href = '/';
         });
+
+        window.location.href = '/';
     };
 
     return (
         <div>
-            {session.status === "authenticated" ? (
+            {status === "authenticated" ? (
                 <div className="flex items-center gap-3">
                     <img
-                        src={session?.data?.user?.image || '/default-avatar.png'}
+                        src={session?.user?.image || '/default-avatar.png'}
                         alt="user"
                         className="w-8 h-8 rounded-full"
                     />
