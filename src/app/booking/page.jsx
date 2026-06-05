@@ -1,13 +1,5 @@
-import React from 'react';
+import UserBookingsList from "@/components/booking/UserBookingsList";
 
-const BookingPage = async ({params}) => {
-    // const res = await params
-    // console.log(res);
-    return (
-        <div>
-            This is booking page 
-        </div>
-    );
-};
-
-export default BookingPage;
+export default function BookingPage() {
+  return <UserBookingsList />;
+}

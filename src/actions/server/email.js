@@ -3,7 +3,13 @@
 import { sendEmail } from "@/lib/sendEmail";
 import { orderInvoiceTemplate } from "@/lib/orderInvoice";
 
-export const sendBookingEmail = async ({ to, orderId, bookingData, totalCost }) => {
+export const sendBookingEmail = async ({
+  to,
+  orderId,
+  bookingData,
+  totalCost,
+  subject = "Your Booking Invoice - Carexyz",
+}) => {
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
     console.warn("Email credentials missing; skipping booking email.");
     return;
@@ -11,7 +17,7 @@ export const sendBookingEmail = async ({ to, orderId, bookingData, totalCost }) 
 
   await sendEmail({
     to,
-    subject: "Your Booking Invoice - Carexyz",
+    subject,
     html: orderInvoiceTemplate({
       orderId,
       data: `

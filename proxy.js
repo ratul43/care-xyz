@@ -1,7 +1,12 @@
 import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 
-const privateRoute = ["/admindashboard", "/my-bookings", "/booking"];
+const privateRoute = [
+  "/admindashboard",
+  "/my-bookings",
+  "/booking",
+  "/book-service",
+];
 
 export async function proxy(req) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
@@ -28,6 +33,7 @@ export const config = {
     "/admindashboard/:path*",
     "/my-bookings/:path*",
     "/booking/:path*",
+    "/book-service/:path*",
     "/services/:path*",
   ],
 };

@@ -1,14 +1,7 @@
-import BookingDetails from '@/components/booking/BookingDetails';
-import React from 'react';
+import BookingDetailView from "@/components/booking/BookingDetailView";
 
-const BookingDetailsPage = async ({params}) => {
-    const {id} = await params
-    // console.log(id);
-    return (
-        <div>
-         <BookingDetails id={id}></BookingDetails>
-        </div>
-    );
-};
+export default async function BookingDetailPage({ params }) {
+  const { id } = await params;
 
-export default BookingDetailsPage;
+  return <BookingDetailView id={id} />;
+}

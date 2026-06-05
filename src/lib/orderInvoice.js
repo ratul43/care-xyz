@@ -19,7 +19,7 @@ export const orderInvoiceTemplate = ({ orderId, data, totalPrice }) => {
 
       <h3 style="margin-top: 20px;">Total: ৳${totalPrice}</h3>
 
-      <p>Thank you for being with Carexyz ❤️</p>
+      <p>Thank you for being with Carexyz </p>
     </div>
   `;
 };

@@ -1,12 +1,5 @@
-import MyBookings from '@/components/booking/MyBookings';
-import React from 'react';
+import MyBookings from "@/components/booking/MyBookings";
 
-const MyBookingPage = () => {
-    return (
-        <div>
-            <MyBookings></MyBookings>
-        </div>
-    );
-};
-
-export default MyBookingPage;
+export default function MyBookingPage() {
+  return <MyBookings />;
+}
