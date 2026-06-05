@@ -1,30 +1,41 @@
-import { loginUser } from "@/actions/server/auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import { collections, dbConnect } from "./dbConnect";
+import { connectDB } from "./dbConnect";
+import bcrypt from "bcryptjs";
 
 export const authOptions = {
-  
-      secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
 
-   session: {
-    strategy: "jwt"
+  session: {
+    strategy: "jwt",
   },
-  
+
   providers: [
     CredentialsProvider({
-      // The name to display on the sign in form (e.g. 'Sign in with...')
       name: "Credentials",
 
-      credentials: {
-        // username: { label: "Username", type: "text", placeholder: "jsmith" },
-        // password: { label: "Password", type: "password" }
-      },
+      async authorize(credentials) {
+        try {
+          const db = await connectDB();
 
-      async authorize(credentials, req) {
-        const user = await loginUser(credentials);
+          const user = await db.collection("users").findOne({
+            email: credentials.email,
+          });
 
-        return user;
+          if (!user) return null;
+
+          const isMatched = await bcrypt.compare(
+            credentials.password,
+            user.password
+          );
+
+          if (!isMatched) return null;
+
+          return user;
+        } catch (err) {
+          console.log("LOGIN ERROR:", err);
+          return null;
+        }
       },
     }),
 
@@ -34,44 +45,48 @@ export const authOptions = {
     }),
   ],
 
-
   callbacks: {
-    async signIn({ user, account, profile, email, credentials }) {
+    async signIn({ user, account }) {
+      try {
+        const db = await connectDB();
 
-  
+        if (!user?.email) return false;
 
-      // console.log({ user, account, profile, email, credentials });
+        const provider = account?.provider || "credentials";
 
-      // console.log(user);
+        const isExist = await db.collection("users").findOne({
+          email: user.email,
+          provider,
+        });
 
-      const isExist = await dbConnect(collections.USERS).findOne({email: user.email, 
-        provider: account?.provider})
+        if (isExist) return true;
 
-        if(isExist) {return true}
-
-          
-          const newUser = {
-            provider: account.provider,
+        await db.collection("users").insertOne({
+          provider,
           name: user.name,
           email: user.email,
-          // contact, 
-          image: user?.image,
-          // nid 
-        };
-        
-        
-        const result = await dbConnect(collections.USERS).insertOne(newUser)
-        
-      return result.acknowledged;
+          image: user.image,
+        });
+
+        return true;
+      } catch (err) {
+        console.log("SIGNIN ERROR:", err);
+        return false;
+      }
     },
-    // async redirect({ url, baseUrl }) {
-    //   return baseUrl;
-    // },
-    // async session({ session, user, token }) {
-    //   return session;
-    // },
-    // async jwt({ token, user, account, profile, isNewUser }) {
-    //   return token;
-    // },
+
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user._id;
+      }
+      return token;
+    },
+
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id;
+      }
+      return session;
+    },
   },
 };

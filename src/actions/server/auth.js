@@ -1,90 +1,82 @@
 "use server";
+import { connectDB } from "@/lib/dbConnect";
 import bcrypt from "bcryptjs";
-
-import { collections, dbConnect } from "@/lib/dbConnect";
-
 
 
 export const postUser = async (payload) => {
+  const db = await connectDB();
+
   const { email, password, name, contact, nid } = payload;
-  // check payload
+
   if (!email || !password) return null;
 
-  // check user
-  const isExist = await dbConnect(collections.USERS).findOne({ email });
-  if (isExist) {
-    return null;
-  }
+  const isExist = await db.collection("users").findOne({ email });
 
-  // create user
+  if (isExist) return null;
 
   const newUser = {
     provider: "credentials",
     name,
     email,
     password: await bcrypt.hash(password, 14),
-    contact, 
-    nid 
+    contact,
+    nid,
   };
 
-  // insert user
+  const result = await db.collection("users").insertOne(newUser);
 
-  const result = await dbConnect(collections.USERS).insertOne(newUser);
+  return result.acknowledged
+    ? { ...result, insertedId: result.insertedId.toString() }
+    : null;
+}; 
 
-  if (result.acknowledged) {
-    return {
-      ...result,
-      insertedId: result.insertedId.toString(),
-    };
+
+export const loginUser = async (payload) => {
+  try {
+      const db = await connectDB()
+
+    const { email, password, name } = payload;
+
+    if (!email || !password) return null;
+
+    const user = await db.collection("users").findOne({ email });
+
+    if (!user) return null;
+
+    const isMatched = await bcrypt.compare(password, user.password);
+
+    if (isMatched) {
+      return user;
+    }
+  } catch (error) {
+    console.log("AUTHORIZE ERROR:", error);
   }
 };
 
-export const loginUser = async (payload) => {
-
-      const { email, password, name } = payload;
-
-
-      if (!email || !password) return null;
-
-    const user = await dbConnect(collections.USERS).findOne({ email });
-    
-    if(!user) return null 
-
-    const isMatched = await bcrypt.compare(password, user.password)
-
-    if(isMatched){
-        return user
-    }
-    else{
-        return null 
-    }
-
-
-}
-
-
 export const bookingsUser = async (data) => {
-
-  const result = await dbConnect(collections.BOOKINGS).insertOne(data);
+  const db = await connectDB()
+  const result = await db.collection("bookings").insertOne(data);
 
   return {
-      ...result,
-      insertedId: result.insertedId.toString(),
-    };
-}
+    ...result,
+    insertedId: result.insertedId.toString(),
+  };
+};
 
 export const isAdmin = async (userMail) => {
   try {
+      const db = await connectDB()
+
     if (!userMail) return null;
-    
-    const result = await dbConnect(collections.USERS).findOne({
-      email: userMail, 
-      role: "admin"
+
+    const result = await db.collection("users").findOne({
+      email: userMail,
+      role: "admin",
     });
-    
+
     // MongoDB document কে plain object-এ convert করুন
     const plainResult = result ? JSON.parse(JSON.stringify(result)) : null;
-    
+
     console.log(plainResult);
     return plainResult;
   } catch (error) {
